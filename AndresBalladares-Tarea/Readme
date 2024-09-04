@@ -1,0 +1,4 @@
+Este trabajo es un API con CRUD que maneja información por medio de MVC.
+
+El servicio es de bebidas, donde se puede realizar funciones CRUD con estas y se puede establecer distintos tipos
+para cada bebida. Puede existir más de un tipo a la vez y también se pueden realizar operaciones CRUD con estos.
