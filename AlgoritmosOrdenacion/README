@@ -1,0 +1,5 @@
+Este código ordena 2000 valores y compara los tiempos de cuatro algoritmos de ordenación por nanosegundos:
+● Burbuja (Bubble Sort).
+● Inserción (Insertion Sort).
+● Mezclas (Merge Sort).
+● Rápido (Quicksort).
