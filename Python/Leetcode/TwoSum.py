@@ -5,11 +5,11 @@ target = 9
 # método utilizado: Hash Map, o diccionario. 
 def TwoSum(nums, target):
     num_map = {}                                #almacena los números que ya se han visto y sus índices.
-    for i, num in enumerate(nums):              
+    for i, num in enumerate(nums):              #i = índice en el arreglo, num = valor ubicado en el índice.
         complement = target - num               #se resta el valor num al target.
         if complement in num_map:               
             return [num_map[complement], i]     #si el valor resultante existe en nums, es la respuesta correcta.
-        num_map[num] = i
+        num_map[num] = i                        #se agrega el valor y su índice a num_map para correr el siguiente ciclo.
 
 # TwoSum imprime la ubicación de los valores que suman a 9 en el arreglo, no los valores.
 print (TwoSum(nums, target))
