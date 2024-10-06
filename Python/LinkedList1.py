@@ -9,7 +9,7 @@ class LinkedList:
     def __init__(self):
         self.head = None
 
-    #-------------------------------------------#
+    #--------------------------------------------#
 
     # Method to add a node at begin of LL
     def insertAtBegin(self, data):
@@ -21,7 +21,7 @@ class LinkedList:
             new_node.next = self.head
             self.head = new_node
 
-    #--------------------------------------------#
+    #---------------------------------------------#
 
     # Method to add a node at any index
     # Indexing starts from 0.
