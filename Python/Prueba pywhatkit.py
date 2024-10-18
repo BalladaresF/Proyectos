@@ -1,3 +1,5 @@
+#Prueba para automatizar mensajes en WhatsApp.
+
 import pywhatkit
 import time
 import pyautogui
