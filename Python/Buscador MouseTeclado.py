@@ -1,3 +1,5 @@
+#Programa sencillo de búsqueda. Se encarga de mover el mouse y clickear las páginas correspondientes.
+
 import pyautogui
 import time
 import keyboard
