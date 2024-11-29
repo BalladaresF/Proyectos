@@ -1,3 +1,5 @@
+# Para crear códigos, inserte el URL y el nombre que desea utilizar.
+
 import pyqrcode 
 from pyqrcode import QRCode #para archivos .svg
 from PIL import Image #para abrir la imagen
