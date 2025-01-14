@@ -3,10 +3,8 @@ create database OrdenAnimales
 use OrdenAnimales
 
 ------------------------------------------------------
---PARTE 1: creaci髇 de las tablas e inserci髇 de datos.
+--PARTE 1: creaci贸n de las tablas e inserci贸n de datos.
 ------------------------------------------------------
-
---Esta parte inserta en la base de datos la informaci髇 creada en el proyecto anterior.
 
 create table Reino(
 	IDReino varchar(30) primary key NOT NULL
@@ -50,7 +48,7 @@ create table Especie(
 	CONSTRAINT fk_Genero FOREIGN KEY (Genero) REFERENCES Genero(IDGenero)
 )
 
---Si se desea eliminar las tablas, usar este c骴igo una vez:
+--Si se desea eliminar las tablas, usar este c贸digo una vez:
 --drop table Especie
 --drop table Genero
 --drop table Familia
@@ -75,16 +73,16 @@ insert into Clase values
 Insert into Orden values
 	('Artiodactyla', 'Mammalia'),
 	('Primate', 'Mammalia'),
-	('Carn韛ora', 'Mammalia'),
+	('Carn铆vora', 'Mammalia'),
 	('Glumifloral', 'Angiosperma'),
 	('Cetacea', 'Mammalia');
 
 Insert into Familia values
 	('Bovidae', 'Artiodactyla'),
 	('Hominidae', 'Primate'),
-	('Canidae', 'Carn韛ora'),
-	('Felidae', 'Carn韛ora'),
-	('Gram韓ea', 'Glumifloral'),
+	('Canidae', 'Carn铆vora'),
+	('Felidae', 'Carn铆vora'),
+	('Gram铆nea', 'Glumifloral'),
 	('Balaenopteridae', 'Cetacea');
 
 Insert into Genero values
@@ -92,7 +90,7 @@ Insert into Genero values
 	('Homo', 'Hominidae'),
 	('Canis', 'Canidae'),
 	('Felis', 'Felidae'),
-	('Zea', 'Gram韓ea'),
+	('Zea', 'Gram铆nea'),
 	('Megaptera', 'Balaenopteridae');
 
 Insert into Especie values
@@ -100,10 +98,10 @@ Insert into Especie values
 	('Sapiens', 'Homo', 'Homo Sapiens', 'Hombre/Mujer'),
 	('Familiaris', 'Canis', 'Canis Familiaris', 'Perro'),
 	('Silvestris', 'Felis', 'Felis Silvestris', 'Gato'),
-	('Ma韟', 'Zea', 'Zea Ma韟', 'Ma韟'),
+	('Ma铆z', 'Zea', 'Zea Ma铆z', 'Ma铆z'),
 	('Novaeangliae', 'Megaptera', 'Megaptera Novaeangliae', 'Ballena Jorobada');
 
---Si se desea eliminar los datos ingresados, usar este c骴igo una vez:
+--Si se desea eliminar los datos ingresados, usar este c贸digo una vez:
 --delete from Especie;
 --delete from Genero;
 --delete from Familia;
@@ -113,10 +111,10 @@ Insert into Especie values
 --delete from Reino;
 
 --------------------------------------------------------------------------
---PARTE 2: funci髇 para obtener un nombre y sacar el reino correspondiente.
+--PARTE 2: funci贸n para obtener un nombre y sacar el reino correspondiente.
 --------------------------------------------------------------------------
 
---Para crear la funci髇:
+--Para crear la funci贸n:
 GO
 create or alter function fnc_get_reino (@Nombre VARCHAR(30))
 returns table
@@ -132,11 +130,11 @@ as
 	where Nombre_Comun=@Nombre;
 GO
 
---Para utilizar la funci髇:
+--Para utilizar la funci贸n:
 SELECT * FROM fnc_get_reino('Gato');
 
 --------------------------------------------------
---PARTE 3: funci髇 para insertar un nuevo registro.
+--PARTE 3: funci贸n para insertar un nuevo registro.
 --------------------------------------------------
 
 --Para crear el procedimiento:
