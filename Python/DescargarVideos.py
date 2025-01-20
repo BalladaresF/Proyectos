@@ -1,4 +1,4 @@
-from pytube import YouTube
+from pytubefix import YouTube
 import os
 
 print("Ingrese el enlace del video por descargar:")
@@ -13,6 +13,7 @@ yt = YouTube(link)
 
 print("\nDesea descargar el video o el audio?\n1. Video.\n2. Audio.")
 Respuesta=input()
+YouTube.use_po_token=True
 
 match Respuesta:
     case "1":
