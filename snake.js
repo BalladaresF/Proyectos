@@ -1,4 +1,4 @@
-//Código de snake.js, que es usado por snake.html
+//Código de snake.js, que es usado por snake.html.
 
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext('2d')
