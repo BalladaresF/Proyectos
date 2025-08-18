@@ -1,151 +1,138 @@
-# Test básico para verificar que todo funciona
-print("=== INICIANDO TEST BÁSICO ===")
+# Test de diagnóstico sin iniciar ChromeDriver para evitar que el IDE se cierre
+print("=== DIAGNÓSTICO PASO A PASO ===")
+import sys
+import os
+
+# Test 1: Verificar Python
+print(f"1. Python versión: {sys.version}")
+print(f"   Plataforma: {sys.platform}")
+
+# Test 2: Verificar librerías básicas
+print("\n2. Verificando librerías...")
+try:
+    import pandas as pd
+    print("   ✅ pandas disponible")
+except ImportError:
+    print("   ❌ pandas NO disponible - Instala con: pip install pandas")
 
 try:
-    print("1. Importando librerías...")
+    import openpyxl
+    print("   ✅ openpyxl disponible")
+except ImportError:
+    print("   ❌ openpyxl NO disponible - Instala con: pip install openpyxl")
+
+try:
+    from selenium import webdriver
+    print("   ✅ selenium disponible")
+except ImportError:
+    print("   ❌ selenium NO disponible - Instala con: pip install selenium")
+
+# Test 3: Verificar ChromeDriver sin iniciarlo
+print("\n3. Buscando ChromeDriver...")
+possible_paths = [
+    # Windows
+    r"C:\Users\{}\Downloads\chromedriver.exe".format(os.getenv('USERNAME', 'Usuario')),
+    r"C:\Users\{}\Downloads\chromedriver".format(os.getenv('USERNAME', 'Usuario')),
+    "./chromedriver.exe",
+    "chromedriver.exe",
+    # Mac/Linux  
+    os.path.expanduser("~/Downloads/chromedriver"),
+    "./chromedriver",
+    "chromedriver"
+]
+
+chromedriver_found = []
+for path in possible_paths:
+    if os.path.exists(path):
+        file_size = os.path.getsize(path)
+        print(f"   ✅ ENCONTRADO: {path} (tamaño: {file_size} bytes)")
+        chromedriver_found.append(path)
+    else:
+        print(f"   ❌ No existe: {path}")
+
+if not chromedriver_found:
+    print("\n   ⚠️  ChromeDriver NO encontrado en ubicaciones comunes")
+    print("   Por favor descárgalo desde: https://chromedriver.chromium.org/")
+else:
+    print(f"\n   ✅ ChromeDriver encontrado en {len(chromedriver_found)} ubicaciones")
+
+# Test 4: Verificar versión de Chrome
+print("\n4. Verificando Chrome...")
+try:
+    if sys.platform.startswith('win'):
+        import winreg
+        # Intentar encontrar Chrome en el registro de Windows
+        chrome_paths = [
+            r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe",
+            r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome"
+        ]
+        
+        chrome_found = False
+        for path in chrome_paths:
+            try:
+                key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path)
+                chrome_found = True
+                print("   ✅ Chrome instalado (detectado en registro)")
+                break
+            except:
+                continue
+        
+        if not chrome_found:
+            print("   ❌ Chrome no detectado en registro")
+    else:
+        print("   ℹ️  Detección de Chrome no implementada para este SO")
+        
+except Exception as e:
+    print(f"   ⚠️  Error verificando Chrome: {e}")
+
+# Test 5: Test de importación de selenium sin iniciar driver
+print("\n5. Test de selenium (sin iniciar navegador)...")
+try:
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options
-    import time
-    import os
-    print("   ✅ Librerías importadas correctamente")
+    from selenium.webdriver.common.by import By
+    print("   ✅ Selenium importado correctamente")
     
-except ImportError as e:
-    print(f"   ❌ Error importando librerías: {e}")
-    print("   Instala las dependencias con: pip install selenium pandas openpyxl")
-    exit()
-
-try:
-    print("2. Configurando opciones de Chrome...")
+    # Crear opciones sin iniciar el driver
     chrome_options = Options()
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    print("   ✅ Opciones configuradas")
+    print("   ✅ Opciones de Chrome configuradas")
     
 except Exception as e:
-    print(f"   ❌ Error configurando opciones: {e}")
-    exit()
+    print(f"   ❌ Error con selenium: {e}")
 
-try:
-    print("3. Buscando ChromeDriver...")
-    
-    # Lista de posibles ubicaciones de ChromeDriver
-    possible_paths = [
-        # Windows
-        r"C:\Users\{}\Downloads\chromedriver.exe".format(os.getenv('USERNAME', 'Usuario')),
-        "./chromedriver.exe",
-        "chromedriver.exe",
-        # Mac/Linux
-        os.path.expanduser("~/Downloads/chromedriver"),
-        "./chromedriver",
-        "chromedriver"
-    ]
-    
-    chromedriver_found = None
-    for path in possible_paths:
-        print(f"   Verificando: {path}")
-        if os.path.exists(path):
-            print(f"   ✅ ChromeDriver encontrado en: {path}")
-            chromedriver_found = path
-            break
-        else:
-            print(f"   ❌ No existe: {path}")
-    
-    if not chromedriver_found:
-        print("\n   ⚠️  ChromeDriver no encontrado en ubicaciones comunes")
-        print("   Por favor, especifica la ruta manualmente:")
-        print("   1. Busca chromedriver.exe en tu carpeta de Descargas")
-        print("   2. Modifica la variable 'chromedriver_path' abajo con la ruta correcta")
-        
-        # Permite especificar ruta manualmente
-        chromedriver_path = input("   Ingresa la ruta completa a ChromeDriver (o presiona Enter para continuar): ").strip()
-        if chromedriver_path and os.path.exists(chromedriver_path):
-            chromedriver_found = chromedriver_path
-            print(f"   ✅ Usando ChromeDriver en: {chromedriver_found}")
-        else:
-            print("   Intentando con el método por defecto...")
-            
-except Exception as e:
-    print(f"   ❌ Error buscando ChromeDriver: {e}")
+# Test 6: Información del sistema
+print("\n6. Información del sistema...")
+print(f"   Sistema operativo: {os.name}")
+if hasattr(os, 'uname'):
+    uname = os.uname()
+    print(f"   Detalles del sistema: {uname}")
 
-try:
-    print("4. Iniciando Chrome...")
-    
-    if chromedriver_found:
-        driver = webdriver.Chrome(executable_path=chromedriver_found, options=chrome_options)
-        print("   ✅ Chrome iniciado con ChromeDriver específico")
-    else:
-        driver = webdriver.Chrome(options=chrome_options)
-        print("   ✅ Chrome iniciado con método por defecto")
-    
-except Exception as e:
-    print(f"   ❌ Error iniciando Chrome: {e}")
-    print(f"   Detalles: {str(e)}")
-    print("\n   Posibles soluciones:")
-    print("   - Descargar ChromeDriver desde: https://chromedriver.chromium.org/")
-    print("   - Verificar que la versión de ChromeDriver coincida con tu versión de Chrome")
-    print("   - Agregar ChromeDriver al PATH del sistema")
-    exit()
+print(f"   Directorio actual: {os.getcwd()}")
+print(f"   Variables de entorno PATH contiene:")
+path_dirs = os.environ.get('PATH', '').split(os.pathsep)
+for i, dir_path in enumerate(path_dirs[:5]):  # Solo mostrar las primeras 5
+    print(f"     {i+1}. {dir_path}")
 
-try:
-    print("5. Navegando a una página de prueba...")
-    driver.get("https://www.google.com")
-    print(f"   ✅ Página cargada: {driver.title}")
-    print(f"   URL actual: {driver.current_url}")
-    
-except Exception as e:
-    print(f"   ❌ Error navegando: {e}")
-    driver.quit()
-    exit()
+print("\n=== DIAGNÓSTICO COMPLETADO ===")
+print("\n🔍 PASOS SIGUIENTES:")
+print("1. Si todas las librerías están disponibles, el problema es con ChromeDriver")
+print("2. Si ChromeDriver fue encontrado, verifica que sea la versión correcta para tu Chrome")
+print("3. Si todo parece correcto, el problema podría ser permisos o antivirus")
 
-try:
-    print("6. Navegando al dashboard de Power BI...")
-    dashboard_url = "https://app.powerbi.com/view?r=eyJrIjoiNjRjMTIxZGEtN2NhNC00NTdlLThiMjItYTRiNTgzYzFhMzgwIiwidCI6ImViOTEyNjQxLTEwNGEtNDRmOC1iNzk3LWIzYjU4ODg1ODRmMWQifQ%3D%3D"
-    
-    driver.get(dashboard_url)
-    print("   ✅ Navegación iniciada...")
-    
-    # Esperar un poco
-    print("   Esperando 10 segundos...")
-    time.sleep(10)
-    
-    print(f"   Título actual: {driver.title}")
-    print(f"   URL actual: {driver.current_url}")
-    
-    # Verificar si hay contenido
-    page_source_length = len(driver.page_source)
-    print(f"   Tamaño del código fuente: {page_source_length} caracteres")
-    
-    if page_source_length > 1000:
-        print("   ✅ La página parece haber cargado contenido")
-        
-        # Buscar palabras clave
-        page_source_lower = driver.page_source.lower()
-        keywords = ['power', 'bi', 'dashboard', 'visual', 'chart', 'data']
-        found_keywords = [kw for kw in keywords if kw in page_source_lower]
-        print(f"   Palabras clave encontradas: {found_keywords}")
-        
-    else:
-        print("   ⚠️  La página parece estar vacía o no cargó correctamente")
-    
-    # Tomar screenshot
-    try:
-        screenshot_path = "test_screenshot.png"
-        driver.save_screenshot(screenshot_path)
-        print(f"   📸 Screenshot guardado: {screenshot_path}")
-    except:
-        print("   ❌ No se pudo tomar screenshot")
-    
-except Exception as e:
-    print(f"   ❌ Error accediendo al dashboard: {e}")
+# Instrucciones específicas
+print("\n📋 INSTRUCCIONES:")
+if chromedriver_found:
+    print(f"✅ Usa esta ruta para ChromeDriver: {chromedriver_found[0]}")
+else:
+    print("❌ Descarga ChromeDriver:")
+    print("   1. Ve a: https://chromedriver.chromium.org/")
+    print("   2. Descarga la versión que coincida con tu Chrome")
+    print("   3. Extrae el archivo a tu carpeta de Descargas")
+    print("   4. Ejecuta este test nuevamente")
 
-finally:
-    print("7. Cerrando navegador...")
-    try:
-        driver.quit()
-        print("   ✅ Navegador cerrado")
-    except:
-        print("   ⚠️  Error cerrando navegador")
-
-print("=== TEST COMPLETADO ===")
-print("\nSi llegaste hasta aquí sin errores, ChromeDriver está funcionando correctamente.")
-print("El siguiente paso sería ejecutar el script principal de extracción.")
+print("\n💡 PRÓXIMO PASO:")
+print("Si este test se completó sin cerrar el IDE, podemos intentar")
+print("una versión más segura del script de Chrome que no cause el crash.")
