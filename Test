@@ -1,0 +1,151 @@
+# Test básico para verificar que todo funciona
+print("=== INICIANDO TEST BÁSICO ===")
+
+try:
+    print("1. Importando librerías...")
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    import time
+    import os
+    print("   ✅ Librerías importadas correctamente")
+    
+except ImportError as e:
+    print(f"   ❌ Error importando librerías: {e}")
+    print("   Instala las dependencias con: pip install selenium pandas openpyxl")
+    exit()
+
+try:
+    print("2. Configurando opciones de Chrome...")
+    chrome_options = Options()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    print("   ✅ Opciones configuradas")
+    
+except Exception as e:
+    print(f"   ❌ Error configurando opciones: {e}")
+    exit()
+
+try:
+    print("3. Buscando ChromeDriver...")
+    
+    # Lista de posibles ubicaciones de ChromeDriver
+    possible_paths = [
+        # Windows
+        r"C:\Users\{}\Downloads\chromedriver.exe".format(os.getenv('USERNAME', 'Usuario')),
+        "./chromedriver.exe",
+        "chromedriver.exe",
+        # Mac/Linux
+        os.path.expanduser("~/Downloads/chromedriver"),
+        "./chromedriver",
+        "chromedriver"
+    ]
+    
+    chromedriver_found = None
+    for path in possible_paths:
+        print(f"   Verificando: {path}")
+        if os.path.exists(path):
+            print(f"   ✅ ChromeDriver encontrado en: {path}")
+            chromedriver_found = path
+            break
+        else:
+            print(f"   ❌ No existe: {path}")
+    
+    if not chromedriver_found:
+        print("\n   ⚠️  ChromeDriver no encontrado en ubicaciones comunes")
+        print("   Por favor, especifica la ruta manualmente:")
+        print("   1. Busca chromedriver.exe en tu carpeta de Descargas")
+        print("   2. Modifica la variable 'chromedriver_path' abajo con la ruta correcta")
+        
+        # Permite especificar ruta manualmente
+        chromedriver_path = input("   Ingresa la ruta completa a ChromeDriver (o presiona Enter para continuar): ").strip()
+        if chromedriver_path and os.path.exists(chromedriver_path):
+            chromedriver_found = chromedriver_path
+            print(f"   ✅ Usando ChromeDriver en: {chromedriver_found}")
+        else:
+            print("   Intentando con el método por defecto...")
+            
+except Exception as e:
+    print(f"   ❌ Error buscando ChromeDriver: {e}")
+
+try:
+    print("4. Iniciando Chrome...")
+    
+    if chromedriver_found:
+        driver = webdriver.Chrome(executable_path=chromedriver_found, options=chrome_options)
+        print("   ✅ Chrome iniciado con ChromeDriver específico")
+    else:
+        driver = webdriver.Chrome(options=chrome_options)
+        print("   ✅ Chrome iniciado con método por defecto")
+    
+except Exception as e:
+    print(f"   ❌ Error iniciando Chrome: {e}")
+    print(f"   Detalles: {str(e)}")
+    print("\n   Posibles soluciones:")
+    print("   - Descargar ChromeDriver desde: https://chromedriver.chromium.org/")
+    print("   - Verificar que la versión de ChromeDriver coincida con tu versión de Chrome")
+    print("   - Agregar ChromeDriver al PATH del sistema")
+    exit()
+
+try:
+    print("5. Navegando a una página de prueba...")
+    driver.get("https://www.google.com")
+    print(f"   ✅ Página cargada: {driver.title}")
+    print(f"   URL actual: {driver.current_url}")
+    
+except Exception as e:
+    print(f"   ❌ Error navegando: {e}")
+    driver.quit()
+    exit()
+
+try:
+    print("6. Navegando al dashboard de Power BI...")
+    dashboard_url = "https://app.powerbi.com/view?r=eyJrIjoiNjRjMTIxZGEtN2NhNC00NTdlLThiMjItYTRiNTgzYzFhMzgwIiwidCI6ImViOTEyNjQxLTEwNGEtNDRmOC1iNzk3LWIzYjU4ODg1ODRmMWQifQ%3D%3D"
+    
+    driver.get(dashboard_url)
+    print("   ✅ Navegación iniciada...")
+    
+    # Esperar un poco
+    print("   Esperando 10 segundos...")
+    time.sleep(10)
+    
+    print(f"   Título actual: {driver.title}")
+    print(f"   URL actual: {driver.current_url}")
+    
+    # Verificar si hay contenido
+    page_source_length = len(driver.page_source)
+    print(f"   Tamaño del código fuente: {page_source_length} caracteres")
+    
+    if page_source_length > 1000:
+        print("   ✅ La página parece haber cargado contenido")
+        
+        # Buscar palabras clave
+        page_source_lower = driver.page_source.lower()
+        keywords = ['power', 'bi', 'dashboard', 'visual', 'chart', 'data']
+        found_keywords = [kw for kw in keywords if kw in page_source_lower]
+        print(f"   Palabras clave encontradas: {found_keywords}")
+        
+    else:
+        print("   ⚠️  La página parece estar vacía o no cargó correctamente")
+    
+    # Tomar screenshot
+    try:
+        screenshot_path = "test_screenshot.png"
+        driver.save_screenshot(screenshot_path)
+        print(f"   📸 Screenshot guardado: {screenshot_path}")
+    except:
+        print("   ❌ No se pudo tomar screenshot")
+    
+except Exception as e:
+    print(f"   ❌ Error accediendo al dashboard: {e}")
+
+finally:
+    print("7. Cerrando navegador...")
+    try:
+        driver.quit()
+        print("   ✅ Navegador cerrado")
+    except:
+        print("   ⚠️  Error cerrando navegador")
+
+print("=== TEST COMPLETADO ===")
+print("\nSi llegaste hasta aquí sin errores, ChromeDriver está funcionando correctamente.")
+print("El siguiente paso sería ejecutar el script principal de extracción.")
